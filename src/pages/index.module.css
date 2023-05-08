@@ -8,6 +8,14 @@
   padding: 0 0.5rem;
 }
 
+.userInput {
+  width: 270px;
+  height: 270px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: rgb(195 193 193);
+}
+
 .main {
   display: flex;
   flex: 1;
@@ -15,6 +23,23 @@
   align-items: center;
   justify-content: center;
   padding: 5rem 0;
+}
+
+.picture {
+  width: 30px;
+  height: 30px;
+  background: url('~/assets/images/icons.png') no-repeat;
+  background-position: 30px;
+}
+
+.cell {
+  width: 30px;
+  height: 30px;
+  background-color: rgb(115 115 115);
+  border: solid 1px rgb(50 50 50);
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .footer {
