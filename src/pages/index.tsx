@@ -20,8 +20,8 @@ const Home = () => {
 
   const newuserInput = JSON.parse(JSON.stringify(userInput));
 
-  //0 = ボムあり
-  // 1 = ボムなし
+  // 1 = ボムあり
+  // 0 = ボムなし
 
   const [bombMap, setBombMap] = useState([
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -52,25 +52,41 @@ const Home = () => {
   const clikCell = (x: number, y: number) => {
     console.log('クリック', x, y);
 
-    //ボム設置
-    const bombstate: number[][] = [[y, x]];
+    // userInput初期クリック座標設置 仮
+    newuserInput[y][x] = 1;
 
-    while (bombstate.length < 11) {
+    //ボム設置
+    const temporary_bombstate: number[][] = [];
+
+    //1次的にbonbmapuにuserinput,x,y 20
+    bombMap[y][x] = 20;
+
+    //９設置マス選出
+    while (temporary_bombstate.length < 10) {
       const x_bomb = Math.floor(Math.random() * 9);
       const y_bomb = Math.floor(Math.random() * 9);
 
-      for (const one_bombstate of bombstate) {
-        if (one_bombstate[0] !== y_bomb && one_bombstate[1] !== x_bomb) {
-          bombstate.push([y_bomb, x_bomb]);
-        }
+      if (bombMap[y_bomb][x_bomb] === 0) {
+        temporary_bombstate.push([y_bomb, x_bomb]);
+        bombMap[y_bomb][x_bomb] = 1;
       }
     }
+    console.log('bonbmap', bombMap);
+    //１次的をもとに戻す
+    bombMap[y][x] = 0;
+    setBombMap(bombMap);
 
-    for (const one_bombstate of bombstate) {
-      bombMap[one_bombstate[0]][one_bombstate[1]] = 11;
-    }
-
-    console.log('bomb座標', bombstate);
+    //数字配置
+    const directions = [
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+      [-1, 1],
+      [-1, 0],
+      [-1, -1],
+    ];
   };
   return (
     <div className={styles.container}>
