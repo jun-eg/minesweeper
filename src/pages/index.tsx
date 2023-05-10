@@ -35,6 +35,19 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
+  //計算値ボード
+  const board: number[][] = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ];
+
   const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
   const isFailure = userInput.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1)
@@ -52,29 +65,45 @@ const Home = () => {
   const clikCell = (x: number, y: number) => {
     console.log('クリック', x, y);
 
-    // userInput初期クリック座標設置 仮
+    //個数数え関数
+    const math_count = (counted_math: number, map: number[][]): number => {
+      let c = 0;
+      for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[i].length; j++) {
+          if (map[j][i] === counted_math) {
+            c++;
+          }
+        }
+      }
+      return c;
+    };
+
+    // userInput初期クリック座標設置
     newuserInput[y][x] = 1;
+    setUserInput(newuserInput);
 
     //ボム設置
-    const temporary_bombstate: number[][] = [];
+    if (math_count(1, bombMap) === 0) {
+      const temporary_bombstate: number[][] = [];
 
-    //1次的にbonbmapuにuserinput,x,y 20
-    bombMap[y][x] = 20;
+      //一時的にbombmapにuserinput,x,y 20
+      bombMap[y][x] = 20;
 
-    //９設置マス選出
-    while (temporary_bombstate.length < 10) {
-      const x_bomb = Math.floor(Math.random() * 9);
-      const y_bomb = Math.floor(Math.random() * 9);
+      //９設置マス選出
+      while (temporary_bombstate.length < 10) {
+        const x_bomb = Math.floor(Math.random() * 9);
+        const y_bomb = Math.floor(Math.random() * 9);
 
-      if (bombMap[y_bomb][x_bomb] === 0) {
-        temporary_bombstate.push([y_bomb, x_bomb]);
-        bombMap[y_bomb][x_bomb] = 1;
+        if (bombMap[y_bomb][x_bomb] === 0) {
+          temporary_bombstate.push([y_bomb, x_bomb]);
+          bombMap[y_bomb][x_bomb] = 1;
+        }
       }
+      console.log('bonbmap', bombMap);
+      //一時的をもとに戻す
+      bombMap[y][x] = 0;
+      setBombMap(bombMap);
     }
-    console.log('bonbmap', bombMap);
-    //１次的をもとに戻す
-    bombMap[y][x] = 0;
-    setBombMap(bombMap);
 
     //数字配置
     const directions = [
