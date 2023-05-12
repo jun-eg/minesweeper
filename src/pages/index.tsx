@@ -36,6 +36,7 @@ const Home = () => {
   ]);
 
   const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
+
   const isFailure = userInput.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1)
   );
@@ -77,9 +78,10 @@ const Home = () => {
     // userInput初期クリック座標設置
     newuserInput[y][x] = 1;
     setUserInput(newuserInput);
+    console.log('userinput', userInput);
 
     //ボム設置
-    if (math_count(1, bombMap) === 0) {
+    if (isPlaying === false) {
       const temporary_bombstate: number[][] = [];
 
       //一時的にbombmapにuserinput,x,y 20
