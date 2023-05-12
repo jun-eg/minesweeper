@@ -37,25 +37,25 @@ const Home = () => {
 
   const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
 
-  const isFailure = userInput.some((row, y) =>
-    row.some((input, x) => input === 1 && bombMap[y][x] === 1)
-  );
+  // const isFailure = userInput.some((row, y) =>
+  //   row.some((input, x) => input === 1 && bombMap[y][x] === 1)
+  // );
 
   const clikstone = (x: number, y: number) => {
     console.log('クリック', x, y);
 
     //個数数え関数
-    const math_count = (counted_math: number, map: number[][]): number => {
-      let c = 0;
-      for (let i = 0; i < map.length; i++) {
-        for (let j = 0; j < map[i].length; j++) {
-          if (map[j][i] === counted_math) {
-            c++;
-          }
-        }
-      }
-      return c;
-    };
+    // const math_count = (counted_math: number, map: number[][]): number => {
+    //   let c = 0;
+    //   for (let i = 0; i < map.length; i++) {
+    //     for (let j = 0; j < map[i].length; j++) {
+    //       if (map[j][i] === counted_math) {
+    //         c++;
+    //       }
+    //     }
+    //   }
+    //   return c;
+    // };
 
     //board
     //-1 = 石
@@ -104,16 +104,16 @@ const Home = () => {
     }
 
     //数字配置
-    const directions = [
-      [0, -1],
-      [1, -1],
-      [1, 0],
-      [1, 1],
-      [0, 1],
-      [-1, 1],
-      [-1, 0],
-      [-1, -1],
-    ];
+    // const directions = [
+    //   [0, -1],
+    //   [1, -1],
+    //   [1, 0],
+    //   [1, 1],
+    //   [0, 1],
+    //   [-1, 1],
+    //   [-1, 0],
+    //   [-1, -1],
+    // ];
   };
   return (
     <div className={styles.container}>
