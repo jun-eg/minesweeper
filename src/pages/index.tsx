@@ -35,34 +35,12 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  //計算値ボード
-  const board: number[][] = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ];
-
   const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
   const isFailure = userInput.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1)
   );
 
-  //-1 = 右
-  // 0 = 画像なしセル
-  // １－８= 数字セル
-  // 9 = 石＋はてな
-  //10 = 石+ 旗
-  //11 = ボム
-  //12 = 赤ボム
-  //ボム設置
-
-  const clikCell = (x: number, y: number) => {
+  const clikstone = (x: number, y: number) => {
     console.log('クリック', x, y);
 
     //個数数え関数
@@ -77,6 +55,24 @@ const Home = () => {
       }
       return c;
     };
+
+    //board
+    //-1 = 石
+    // 0 = 画像なしセル
+    // １－８= 数字セル
+    // 9 = 石＋はてな
+    //10 = 石+ 旗
+    //11 = ボム
+    //12 = 赤ボム
+
+    //board制作
+    const rows = 9;
+    const cols = 9;
+    const initialValue = -1;
+
+    const board = Array.from({ length: rows }, () => Array(cols).fill(initialValue));
+
+    console.log('board', board);
 
     // userInput初期クリック座標設置
     newuserInput[y][x] = 1;
@@ -122,7 +118,7 @@ const Home = () => {
       <div className={styles.userInput}>
         {userInput.map((row, y) =>
           row.map((cell, x) => (
-            <div className={styles.cell} key={`${x}-${y}`} onClick={() => clikCell(x, y)}>
+            <div className={styles.cell} key={`${x}-${y}`} onClick={() => clikstone(x, y)}>
               <div className={styles.picture} style={{ backgroundPosition: -30 * cell + 30 }} />
             </div>
           ))
