@@ -34,28 +34,27 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
+  const bombCount = 10;
 
-  const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
-
-  // const isFailure = userInput.some((row, y) =>
-  //   row.some((input, x) => input === 1 && bombMap[y][x] === 1)
-  // );
+  const directions = [
+    [0, -1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+    [0, 1],
+    [-1, 1],
+    [-1, 0],
+    [-1, -1],
+  ];
 
   const clikstone = (x: number, y: number) => {
     console.log('クリック', x, y);
 
-    //個数数え関数
-    // const math_count = (counted_math: number, map: number[][]): number => {
-    //   let c = 0;
-    //   for (let i = 0; i < map.length; i++) {
-    //     for (let j = 0; j < map[i].length; j++) {
-    //       if (map[j][i] === counted_math) {
-    //         c++;
-    //       }
-    //     }
-    //   }
-    //   return c;
-    // };
+    //board制作
+    const rows = 9;
+    const cols = 9;
+
+    const board = Array.from({ length: rows }, () => Array(cols).fill(-1));
 
     //board
     //-1 = 石
@@ -66,58 +65,90 @@ const Home = () => {
     //11 = ボム
     //12 = 赤ボム
 
-    //board制作
-    const rows = 9;
-    const cols = 9;
-    const initialValue = -1;
+    //座標リスト化関数
+    const state_list = (array: number[][], targetValue: number) => {
+      const state: number[][] = [];
 
-    const board = Array.from({ length: rows }, () => Array(cols).fill(initialValue));
-
-    console.log('board', board);
+      array.forEach((row, rowIndex) => {
+        row.forEach((value, colIndex) => {
+          if (value === targetValue) {
+            state.push([rowIndex, colIndex]);
+          }
+        });
+      });
+      return state;
+    };
 
     // userInput初期クリック座標設置
     newuserInput[y][x] = 1;
     setUserInput(newuserInput);
-    console.log('userinput', userInput);
+    console.log('userinput', newuserInput);
+
+    //計算値
+    const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
+
+    const isFailure = userInput.some((row, y) =>
+      row.some((input, x) => input === 1 && bombMap[y][x] === 1)
+    );
+
+    const target_valu: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    const openedCount = board.reduce((total, row) => {
+      return total + row.filter((value) => value === target_valu).length;
+    }, 0);
+
+    console.log('opened count', openedCount);
+
+    const isSuccess = openedCount + bombCount;
 
     //ボム設置
     if (isPlaying === false) {
       const temporary_bombstate: number[][] = [];
 
-      //一時的にbombmapにuserinput,x,y 20
+      //userinputとbomb座標重複回避
       bombMap[y][x] = 20;
 
       //９設置マス選出
-      while (temporary_bombstate.length < 10) {
+      while (temporary_bombstate.length < bombCount) {
         const x_bomb = Math.floor(Math.random() * 9);
         const y_bomb = Math.floor(Math.random() * 9);
 
         if (bombMap[y_bomb][x_bomb] === 0) {
           temporary_bombstate.push([y_bomb, x_bomb]);
           bombMap[y_bomb][x_bomb] = 1;
+          //boardボム設置
+          board[y_bomb][x_bomb] = 11;
         }
       }
       console.log('bonbmap', bombMap);
-      //一時的をもとに戻す
+      //重複回避解除
       bombMap[y][x] = 0;
       setBombMap(bombMap);
     }
+    console.log('bomb位置', state_list(bombMap, 1));
 
-    //数字配置
-    // const directions = [
-    //   [0, -1],
-    //   [1, -1],
-    //   [1, 0],
-    //   [1, 1],
-    //   [0, 1],
-    //   [-1, 1],
-    //   [-1, 0],
-    //   [-1, -1],
-    // ];
+    //数字設置
+    for (const one_cell of state_list(bombMap, 0)) {
+      let around_bomb_count = 0;
+
+      for (const exposure of directions) {
+        if (
+          bombMap[one_cell[0] + exposure[0]] !== undefined &&
+          bombMap[one_cell[1] + exposure[1]] !== undefined &&
+          bombMap[one_cell[0] + exposure[0]][one_cell[1] + exposure[1]] === 1
+        ) {
+          console.log('数字位置', one_cell);
+          around_bomb_count++;
+        }
+      }
+      board[one_cell[0]][one_cell[1]] = around_bomb_count;
+      console.log('ボム数', around_bomb_count);
+    }
+
+    console.log('board', board);
   };
   return (
     <div className={styles.container}>
-      <div className={styles.userInput}>
+      <div className={styles.board}>
         {userInput.map((row, y) =>
           row.map((cell, x) => (
             <div className={styles.cell} key={`${x}-${y}`} onClick={() => clikstone(x, y)}>
