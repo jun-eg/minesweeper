@@ -18,6 +18,8 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
+  console.log('userinput', userInput);
+
   const newuserInput = JSON.parse(JSON.stringify(userInput));
 
   // 1 = ボムあり
@@ -41,6 +43,19 @@ const Home = () => {
     row.some((input, x) => input === 1 && bombMap[y][x] === 1)
   );
 
+  //click_bomb座標を取得
+  if (isFailure === true) {
+    const click_bomb_position: number[] = [];
+
+    userInput.forEach((row, y) => {
+      row.forEach((input, x) => {
+        if (input === 1 && bombMap[y][x] === 1) {
+          click_bomb_position.push(y, x);
+        }
+      });
+    });
+    console.log('click_bomb', click_bomb_position);
+  }
   //board
   //-1 = 石
   // 0 = 画像なしセル
@@ -50,7 +65,7 @@ const Home = () => {
   //11 = ボム
   //12 = 赤ボム
 
-  //board制作  必要 *最初だけ処理、2回目以降userinput参照*
+  //初期board設置  必要 *最初だけ処理、2回目以降userinput参照*
   const rows = 9;
   const cols = 9;
   const initialValue = -1;
@@ -59,8 +74,26 @@ const Home = () => {
 
   console.log('board', board);
 
+  //計算値をboardに反映
+
+  //usrinputより1の座標リスト化
+  const left_click_positions: number[][] = [];
+
+  for (let zy = 0; zy < newuserInput.length; zy++) {
+    for (let zx = 0; zx < newuserInput[zy].length; zx++) {
+      if (newuserInput[zy][zx] === 1) {
+        left_click_positions.push([zy, zx]);
+      }
+    }
+  }
+
+  // for (const one_left_click_position of left_click_positions) {
+  // }
+
+  console.log('left_click_positions', left_click_positions);
+
   const clikstone = (x: number, y: number) => {
-    console.log('クリック', x, y);
+    console.log('クリック※xy順', x, y);
 
     //個数数え関数
     const math_count = (counted_math: number, map: number[][]): number => {
@@ -78,7 +111,6 @@ const Home = () => {
     // userInput初期クリック座標設置
     newuserInput[y][x] = 1;
     setUserInput(newuserInput);
-    console.log('userinput', userInput);
 
     //ボム設置
     if (isPlaying === false) {
@@ -98,6 +130,7 @@ const Home = () => {
         }
       }
       console.log('bonbmap', bombMap);
+
       //一時的をもとに戻す
       bombMap[y][x] = 0;
       setBombMap(bombMap);
