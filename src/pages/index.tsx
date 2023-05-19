@@ -44,9 +44,10 @@ const Home = () => {
   );
 
   //click_bomb座標を取得
-  if (isFailure === true) {
-    const click_bomb_position: number[] = [];
 
+  const click_bomb_position: number[] = [];
+
+  if (isFailure === true) {
     userInput.forEach((row, y) => {
       row.forEach((input, x) => {
         if (input === 1 && bombMap[y][x] === 1) {
@@ -65,7 +66,7 @@ const Home = () => {
   //11 = ボム
   //12 = 赤ボム
 
-  //初期board設置  必要 *最初だけ処理、2回目以降userinput参照*
+  //初期board設置
   const rows = 9;
   const cols = 9;
   const initialValue = -1;
@@ -75,6 +76,17 @@ const Home = () => {
   console.log('board', board);
 
   //計算値をboardに反映
+
+  const directions = [
+    [0, -1],
+    [1, -1],
+    [1, 0],
+    [1, 1],
+    [0, 1],
+    [-1, 1],
+    [-1, 0],
+    [-1, -1],
+  ];
 
   //usrinputより1の座標リスト化
   const left_click_positions: number[][] = [];
@@ -87,8 +99,25 @@ const Home = () => {
     }
   }
 
-  // for (const one_left_click_position of left_click_positions) {
-  // }
+  for (const one_left_click_position of left_click_positions) {
+    if (one_left_click_position !== click_bomb_position) {
+      let bomb_count = 0;
+
+      for (const next_cell_course of directions) {
+        if (
+          bombMap[one_left_click_position[0] + next_cell_course[0]] !== undefined &&
+          bombMap[one_left_click_position[1] + next_cell_course[1]] !== undefined &&
+          bombMap[one_left_click_position[0] + next_cell_course[0]][
+            one_left_click_position[1] + next_cell_course[1]
+          ] === 1
+        ) {
+          bomb_count++;
+        }
+      }
+
+      board[one_left_click_position[0]][one_left_click_position[1]] = bomb_count;
+    }
+  }
 
   console.log('left_click_positions', left_click_positions);
 
@@ -135,18 +164,6 @@ const Home = () => {
       bombMap[y][x] = 0;
       setBombMap(bombMap);
     }
-
-    //数字配置
-    const directions = [
-      [0, -1],
-      [1, -1],
-      [1, 0],
-      [1, 1],
-      [0, 1],
-      [-1, 1],
-      [-1, 0],
-      [-1, -1],
-    ];
   };
   return (
     <div className={styles.container}>
