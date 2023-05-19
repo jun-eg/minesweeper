@@ -37,26 +37,6 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
-
-  const isFailure = userInput.some((row, y) =>
-    row.some((input, x) => input === 1 && bombMap[y][x] === 1)
-  );
-
-  //click_bomb座標を取得
-
-  const click_bomb_position: number[] = [];
-
-  if (isFailure === true) {
-    userInput.forEach((row, y) => {
-      row.forEach((input, x) => {
-        if (input === 1 && bombMap[y][x] === 1) {
-          click_bomb_position.push(y, x);
-        }
-      });
-    });
-    console.log('click_bomb', click_bomb_position);
-  }
   //board
   //-1 = 石
   // 0 = 画像なしセル
@@ -75,8 +55,25 @@ const Home = () => {
 
   console.log('board', board);
 
-  //計算値をboardに反映
+  const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
 
+  //ゲームオーバー処理
+  const isFailure = userInput.some((row, y) =>
+    row.some((input, x) => input === 1 && bombMap[y][x] === 1)
+  );
+
+  if (isFailure === true) {
+    //boardにbonb設置
+    for (let zy = 0; zy < newuserInput.length; zy++) {
+      for (let zx = 0; zx < newuserInput[zy].length; zx++) {
+        if (bombMap[zy][zx] === 1) {
+          board[zy][zx] = 11;
+        }
+      }
+    }
+  }
+
+  //計算値をboardに反映
   const directions = [
     [0, -1],
     [1, -1],
@@ -99,8 +96,9 @@ const Home = () => {
     }
   }
 
+  //board数字設置
   for (const one_left_click_position of left_click_positions) {
-    if (one_left_click_position !== click_bomb_position) {
+    if (bombMap[one_left_click_position[0]][one_left_click_position[1]] !== 1) {
       let bomb_count = 0;
 
       for (const next_cell_course of directions) {
