@@ -34,24 +34,13 @@ const Home = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
-  const bombCount = 10;
 
-  const directions = [
-    [0, -1],
-    [1, -1],
-    [1, 0],
-    [1, 1],
-    [0, 1],
-    [-1, 1],
-    [-1, 0],
-    [-1, -1],
-  ];
+  const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
 
-  //board作成
-  const rows = 9;
-  const cols = 9;
+  const isFailure = userInput.some((row, y) =>
+    row.some((input, x) => input === 1 && bombMap[y][x] === 1)
+  );
 
-  const board: number[][] = Array.from({ length: rows }, () => Array(cols).fill(-1));
   //board
   //-1 = 石
   // 0 = 画像なしセル
@@ -61,91 +50,70 @@ const Home = () => {
   //11 = ボム
   //12 = 赤ボム
 
-  const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
+  //board制作  必要 *最初だけ処理、2回目以降userinput参照*
+  const rows = 9;
+  const cols = 9;
+  const initialValue = -1;
 
-  //ボム設置
-  if (isPlaying === false) {
-    const temporary_bombstate: number[][] = [];
+  const board = Array.from({ length: rows }, () => Array(cols).fill(initialValue));
 
-    //userinputとbomb座標重複回避
-    // bombMap[y][x] = 20;
-
-    //９設置マス選出
-    while (temporary_bombstate.length < bombCount) {
-      const x_bomb = Math.floor(Math.random() * 9);
-      const y_bomb = Math.floor(Math.random() * 9);
-
-      if (bombMap[y_bomb][x_bomb] === 0) {
-        temporary_bombstate.push([y_bomb, x_bomb]);
-        bombMap[y_bomb][x_bomb] = 1;
-        //boardボム設置
-        board[y_bomb][x_bomb] = 11;
-      }
-    }
-    console.log('bonbmap', bombMap);
-    //重複回避解除
-    // bombMap[y][x] = 0;
-    setBombMap(bombMap);
-  }
+  console.log('board', board);
 
   const clikstone = (x: number, y: number) => {
     console.log('クリック', x, y);
 
-    //座標リスト化関数
-    const state_list = (array: number[][], targetValue: number) => {
-      const state: number[][] = [];
-
-      array.forEach((row, rowIndex) => {
-        row.forEach((value, colIndex) => {
-          if (value === targetValue) {
-            state.push([rowIndex, colIndex]);
+    //個数数え関数
+    const math_count = (counted_math: number, map: number[][]): number => {
+      let c = 0;
+      for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[i].length; j++) {
+          if (map[j][i] === counted_math) {
+            c++;
           }
-        });
-      });
-      return state;
+        }
+      }
+      return c;
     };
-
-    console.log('bomb位置', state_list(bombMap, 1));
 
     // userInput初期クリック座標設置
     newuserInput[y][x] = 1;
     setUserInput(newuserInput);
-    console.log('userinput', newuserInput);
+    console.log('userinput', userInput);
 
-    //計算値
+    //ボム設置
+    if (isPlaying === false) {
+      const temporary_bombstate: number[][] = [];
 
-    const isFailure = userInput.some((row, y) =>
-      row.some((input, x) => input === 1 && bombMap[y][x] === 1)
-    );
+      //一時的にbombmapにuserinput,x,y 20
+      bombMap[y][x] = 20;
 
-    const target_valu: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-    const openedCount = board.reduce((total, row) => {
-      return total + row.filter((value) => target_valu.includes(value)).length;
-    }, 0);
+      //９設置マス選出
+      while (temporary_bombstate.length < 10) {
+        const x_bomb = Math.floor(Math.random() * 9);
+        const y_bomb = Math.floor(Math.random() * 9);
 
-    console.log('opened count', openedCount);
-
-    const isSuccess = openedCount + bombCount;
-
-    //数字設置
-    for (const one_cell of state_list(bombMap, 0)) {
-      let around_bomb_count = 0;
-
-      for (const exposure of directions) {
-        if (
-          bombMap[one_cell[0] + exposure[0]] !== undefined &&
-          bombMap[one_cell[1] + exposure[1]] !== undefined &&
-          bombMap[one_cell[0] + exposure[0]][one_cell[1] + exposure[1]] === 1
-        ) {
-          console.log('数字位置', one_cell);
-          around_bomb_count++;
+        if (bombMap[y_bomb][x_bomb] === 0) {
+          temporary_bombstate.push([y_bomb, x_bomb]);
+          bombMap[y_bomb][x_bomb] = 1;
         }
       }
-      board[one_cell[0]][one_cell[1]] = around_bomb_count;
-      console.log('ボム数', around_bomb_count);
+      console.log('bonbmap', bombMap);
+      //一時的をもとに戻す
+      bombMap[y][x] = 0;
+      setBombMap(bombMap);
     }
 
-    console.log('board', board);
+    //数字配置
+    const directions = [
+      [0, -1],
+      [1, -1],
+      [1, 0],
+      [1, 1],
+      [0, 1],
+      [-1, 1],
+      [-1, 0],
+      [-1, -1],
+    ];
   };
   return (
     <div className={styles.container}>
@@ -153,7 +121,11 @@ const Home = () => {
         {board.map((row, y) =>
           row.map((cell, x) => (
             <div className={styles.cell} key={`${x}-${y}`} onClick={() => clikstone(x, y)}>
-              <div className={styles.picture} style={{ backgroundPosition: -30 * cell + 30 }} />
+              {cell !== -1 && (
+                <div className={styles.picture} style={{ backgroundPosition: -30 * cell + 30 }} />
+              )}
+
+              {cell === -1 && <div className={styles.storn} key={`${x}-${y}`} />}
             </div>
           ))
         )}
