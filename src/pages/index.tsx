@@ -239,8 +239,8 @@ const Home = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.board_container}>
-        <div className={styles.niko_button} onClick={() => click_niko(100, 100)}>
+      <div className={styles.boardcontainer}>
+        <div className={styles.nikobutton} onClick={() => click_niko(100, 100)}>
           <div
             className={styles.picture}
             style={{ backgroundPosition: -30 * niko_button_value + 30 }}
