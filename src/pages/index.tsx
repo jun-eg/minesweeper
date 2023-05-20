@@ -96,6 +96,30 @@ const Home = () => {
     }
   }
 
+  // //空白連鎖
+  const empty_cell_chain = (cell_list: number[][]) => {
+    for (const empty_cell_posicion of cell_list) {
+      if (bombMap[empty_cell_posicion[0]][empty_cell_posicion[1]] !== 1) {
+        for (const next_cell_course of directions) {
+          if (
+            board[empty_cell_posicion[0] + next_cell_course[0]] !== undefined &&
+            board[empty_cell_posicion[1] + next_cell_course[1]] !== undefined &&
+            board[empty_cell_posicion[0] + next_cell_course[0]][
+              empty_cell_posicion[1] + next_cell_course[1]
+            ] === -1
+          ) {
+            bomb_quantity_set([
+              [
+                empty_cell_posicion[0] + next_cell_course[0],
+                empty_cell_posicion[1] + next_cell_course[1],
+              ],
+            ]);
+          }
+        }
+      }
+    }
+  };
+
   //board数字設置関数
   const bomb_quantity_set = (posicions_list: number[][]) => {
     const empty_cell_list: number[][] = [];
@@ -118,40 +142,22 @@ const Home = () => {
 
         board[one_left_click_position[0]][one_left_click_position[1]] = bomb_count;
 
-        if (bomb_count === 0) {
+        if (board[one_left_click_position[0]][one_left_click_position[1]] === 0) {
           empty_cell_list.push(one_left_click_position);
         }
       }
     }
 
     if (empty_cell_list.length !== 0) {
+      console.log('空ますリスト', empty_cell_list);
+
       empty_cell_chain(empty_cell_list);
     }
-    console.log('空ますリスト', empty_cell_list);
 
     console.log('left_click_positions', left_click_positions);
   };
 
   bomb_quantity_set(left_click_positions);
-
-  // //空白連鎖
-  const empty_cell_chain = (cell_list: number[][]) => {
-    for (const empty_cell_posicion of cell_list) {
-      for (const next_cell_course of directions) {
-        if (
-          board[empty_cell_posicion[0] + next_cell_course[0]] !== undefined &&
-          board[empty_cell_posicion[1] + next_cell_course[1]] !== undefined
-        ) {
-          bomb_quantity_set([
-            [
-              empty_cell_posicion[0] + next_cell_course[0],
-              empty_cell_posicion[1] + next_cell_course[1],
-            ],
-          ]);
-        }
-      }
-    }
-  };
 
   const clikstone = (x: number, y: number) => {
     console.log('クリック※xy順', x, y);
