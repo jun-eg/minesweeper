@@ -165,8 +165,6 @@ const Home = () => {
   //リロード
   const click_niko = (x: number, y: number) => {
     if (x === 100 && y === 100) {
-      console.log('リロード', x, y);
-
       //bonbmap初期化
       for (let i = 0; i < bombMap.length; i++) {
         for (let j = 0; j < bombMap[i].length; j++) {
@@ -238,7 +236,9 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.board_container}>
-        <div className={styles.niko_button} onClick={() => click_niko(100, 100)} />
+        <div className={styles.niko_button} onClick={() => click_niko(100, 100)}>
+          <div className={styles.picture} style={{ backgroundPosition: -30 * 12 + 30 }} />
+        </div>
         <div className={styles.board}>
           {board.map((row, y) =>
             row.map((cell, x) => (
