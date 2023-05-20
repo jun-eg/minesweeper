@@ -46,6 +46,8 @@ const Home = () => {
   //11 = ボム
   //12 = 赤ボム
 
+  const ret_bomb_posicion: number[] = [];
+
   //初期board設置
   const rows = 9;
   const cols = 9;
@@ -64,6 +66,7 @@ const Home = () => {
 
   if (isFailure === true) {
     //boardにbonb設置
+
     for (let zy = 0; zy < newuserInput.length; zy++) {
       for (let zx = 0; zx < newuserInput[zy].length; zx++) {
         if (bombMap[zy][zx] === 1) {
@@ -96,7 +99,7 @@ const Home = () => {
     }
   }
 
-  // //空白連鎖
+  //空白連鎖
   const empty_cell_chain = (cell_list: number[][]) => {
     for (const empty_cell_posicion of cell_list) {
       if (bombMap[empty_cell_posicion[0]][empty_cell_posicion[1]] !== 1) {
@@ -202,21 +205,35 @@ const Home = () => {
       bombMap[y][x] = 0;
       setBombMap(bombMap);
     }
+
+    //赤bomb設置
+    if (bombMap[0][1] === 1) {
+      ret_bomb_posicion.push(y, x);
+    }
   };
+
   return (
     <div className={styles.container}>
-      <div className={styles.board}>
-        {board.map((row, y) =>
-          row.map((cell, x) => (
-            <div className={styles.cell} key={`${x}-${y}`} onClick={() => clikstone(x, y)}>
-              {cell !== -1 && (
-                <div className={styles.picture} style={{ backgroundPosition: -30 * cell + 30 }} />
-              )}
+      <div className={styles.board_container}>
+        <div className={styles.niko_button} />
+        <div className={styles.board}>
+          {board.map((row, y) =>
+            row.map((cell, x) => (
+              <div
+                className={styles.cell}
+                key={`${x}-${y}`}
+                onClick={() => clikstone(x, y)}
+                style={{ background: ret_bomb_posicion.length === 1 ? '#fa0000' : '#b4b4b4' }}
+              >
+                {cell !== -1 && (
+                  <div className={styles.picture} style={{ backgroundPosition: -30 * cell + 30 }} />
+                )}
 
-              {cell === -1 && <div className={styles.storn} key={`${x}-${y}`} />}
-            </div>
-          ))
-        )}
+                {cell === -1 && <div className={styles.storn} key={`${x}-${y}`} />}
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
