@@ -12,34 +12,25 @@
   height: 270px;
   display: flex;
   flex-wrap: wrap;
-  position: absolute;
-  padding-top: 90px;
-}
-
-.top_board {
-  width: 270px;
-  height: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: outset 3px rgb(66 66 66);
 }
 
 .board_container {
   width: 350px;
   height: 450px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 30px;
+  align-items: center;
   background-color: rgb(221 220 220);
   border: outset 12px rgb(252 252 252);
   position: absolute;
-  padding-top: 30px;
 }
 
 .niko_button {
   width: 60px;
   height: 60px;
-  background-color: black;
+  background-color: rgb(193 190 190);
   border: outset 5px rgb(252 252 252);
 }
 

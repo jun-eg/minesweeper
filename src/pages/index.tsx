@@ -162,6 +162,29 @@ const Home = () => {
 
   bomb_quantity_set(left_click_positions);
 
+  //リロード
+  const click_niko = (x: number, y: number) => {
+    if (x === 100 && y === 100) {
+      console.log('リロード', x, y);
+
+      //bonbmap初期化
+      for (let i = 0; i < bombMap.length; i++) {
+        for (let j = 0; j < bombMap[i].length; j++) {
+          bombMap[i][j] = 0;
+        }
+      }
+
+      //userinput初期化
+      for (let i = 0; i < newuserInput.length; i++) {
+        for (let j = 0; j < newuserInput[i].length; j++) {
+          newuserInput[i][j] = 0;
+        }
+      }
+
+      setUserInput(newuserInput);
+    }
+  };
+
   const clikstone = (x: number, y: number) => {
     console.log('クリック※xy順', x, y);
 
@@ -215,7 +238,7 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div className={styles.board_container}>
-        <div className={styles.niko_button} />
+        <div className={styles.niko_button} onClick={() => click_niko(100, 100)} />
         <div className={styles.board}>
           {board.map((row, y) =>
             row.map((cell, x) => (
