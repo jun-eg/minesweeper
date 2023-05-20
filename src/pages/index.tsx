@@ -60,13 +60,14 @@ const Home = () => {
   const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
 
   //ゲームオーバー処理
+  let niko_button_value = 12;
+
   const isFailure = userInput.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1)
   );
 
   if (isFailure === true) {
     //boardにbonb設置
-
     for (let zy = 0; zy < newuserInput.length; zy++) {
       for (let zx = 0; zx < newuserInput[zy].length; zx++) {
         if (bombMap[zy][zx] === 1) {
@@ -74,6 +75,8 @@ const Home = () => {
         }
       }
     }
+
+    niko_button_value = 14;
   }
 
   //計算値をboardに反映
@@ -152,12 +155,8 @@ const Home = () => {
     }
 
     if (empty_cell_list.length !== 0) {
-      console.log('空ますリスト', empty_cell_list);
-
       empty_cell_chain(empty_cell_list);
     }
-
-    console.log('left_click_positions', left_click_positions);
   };
 
   bomb_quantity_set(left_click_positions);
@@ -183,21 +182,31 @@ const Home = () => {
     }
   };
 
-  const clikstone = (x: number, y: number) => {
-    console.log('クリック※xy順', x, y);
-
-    //個数数え関数
-    const math_count = (counted_math: number, map: number[][]): number => {
-      let c = 0;
-      for (let i = 0; i < map.length; i++) {
-        for (let j = 0; j < map[i].length; j++) {
-          if (map[j][i] === counted_math) {
-            c++;
-          }
+  //個数数え関数
+  const math_count = (counted_math: number, map: number[][]): number => {
+    let c = 0;
+    for (let i = 0; i < map.length; i++) {
+      for (let j = 0; j < map[i].length; j++) {
+        if (map[j][i] === counted_math) {
+          c++;
         }
       }
-      return c;
-    };
+    }
+    return c;
+  };
+
+  //クリア処理
+  let stone_count = math_count(9, board);
+  stone_count += math_count(10, board);
+  stone_count += math_count(-1, board);
+
+  if (stone_count === 10) {
+    niko_button_value = 13;
+    console.log('クリア');
+  }
+
+  const clikstone = (x: number, y: number) => {
+    console.log('クリック※xy順', x, y);
 
     // userInput初期クリック座標設置
     newuserInput[y][x] = 1;
@@ -226,18 +235,16 @@ const Home = () => {
       bombMap[y][x] = 0;
       setBombMap(bombMap);
     }
-
-    //赤bomb設置
-    if (bombMap[0][1] === 1) {
-      ret_bomb_posicion.push(y, x);
-    }
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.board_container}>
         <div className={styles.niko_button} onClick={() => click_niko(100, 100)}>
-          <div className={styles.picture} style={{ backgroundPosition: -30 * 12 + 30 }} />
+          <div
+            className={styles.picture}
+            style={{ backgroundPosition: -30 * niko_button_value + 30 }}
+          />
         </div>
         <div className={styles.board}>
           {board.map((row, y) =>
