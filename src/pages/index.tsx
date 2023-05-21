@@ -59,25 +59,12 @@ const Home = () => {
 
   const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
 
-  //ゲームオーバー処理
+  //ゲームオーバー判定
   let niko_button_value = 12;
 
   const isFailure = userInput.some((row, y) =>
     row.some((input, x) => input === 1 && bombMap[y][x] === 1)
   );
-
-  if (isFailure === true) {
-    //boardにbonb設置
-    for (let zy = 0; zy < newuserInput.length; zy++) {
-      for (let zx = 0; zx < newuserInput[zy].length; zx++) {
-        if (bombMap[zy][zx] === 1) {
-          board[zy][zx] = 11;
-        }
-      }
-    }
-
-    niko_button_value = 14;
-  }
 
   //計算値をboardに反映
   const directions = [
@@ -209,20 +196,34 @@ const Home = () => {
     }
     setUserInput(newuserInput);
     console.log('uinput', newuserInput);
+  };
 
-    //旗、？設置、消去
-    for (let zy = 0; zy < userInput.length; zy++) {
-      for (let zx = 0; zx < userInput[zy].length; zx++) {
-        if (userInput[zy][zx] === 0) {
-          board[zy][zx] = -1;
-        } else if (userInput[zy][zx] === 3) {
-          board[zy][zx] = 10;
-        } else if (userInput[zy][zx] === 2) {
-          board[zy][zx] = 9;
+  //旗、？設置、消去
+  for (let zy = 0; zy < userInput.length; zy++) {
+    for (let zx = 0; zx < userInput[zy].length; zx++) {
+      if ((newuserInput[zy][zx] === 0 && board[zy][zx] === 10) || board[zy][zx] === 9) {
+        board[zy][zx] = -1;
+      } else if (newuserInput[zy][zx] === 3) {
+        board[zy][zx] = 10;
+      } else if (newuserInput[zy][zx] === 2) {
+        board[zy][zx] = 9;
+      }
+    }
+  }
+
+  //ゲームオーバー処理
+  if (isFailure === true) {
+    //boardにbonb設置
+    for (let zy = 0; zy < bombMap.length; zy++) {
+      for (let zx = 0; zx < bombMap[zy].length; zx++) {
+        if (bombMap[zy][zx] === 1) {
+          board[zy][zx] = 11;
         }
       }
     }
-  };
+
+    niko_button_value = 14;
+  }
 
   //クリア処理
   let stone_count = math_count(9, board);
@@ -235,7 +236,11 @@ const Home = () => {
 
     for (let zy = 0; zy < userInput.length; zy++) {
       for (let zx = 0; zx < userInput[zy].length; zx++) {
-        if (board[zy][zx] === -1 || board[zy][zx] === 9 || board[zy][zx] === 10) {
+        if (
+          board[zy][zx] === -1 ||
+          board[zy][zx] === 9 ||
+          (board[zy][zx] === 10 && userInput[zy][zx] !== 1)
+        ) {
           board[zy][zx] = 10;
         }
       }
@@ -253,7 +258,12 @@ const Home = () => {
     if (isPlaying === false) {
       const temporary_bombstate: number[][] = [];
 
-      //一時的にbombmapにuserinput,x,y 20
+      //一時的にbombmapにuserinput,x,yと周り9マスに20
+      for (const course of directions) {
+        if (bombMap[y + course[0]] !== undefined && bombMap[x + course[1]] !== undefined) {
+          bombMap[y + course[0]][x + course[1]] = 20;
+        }
+      }
       bombMap[y][x] = 20;
 
       //９設置マス選出
@@ -269,6 +279,11 @@ const Home = () => {
       console.log('bonbmap', bombMap);
 
       //一時的をもとに戻す
+      for (const course of directions) {
+        if (bombMap[y + course[0]] !== undefined && bombMap[x + course[1]] !== undefined) {
+          bombMap[y + course[0]][x + course[1]] = 0;
+        }
+      }
       bombMap[y][x] = 0;
       setBombMap(bombMap);
     }
