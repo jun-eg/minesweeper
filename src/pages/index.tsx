@@ -205,6 +205,12 @@ const Home = () => {
     console.log('クリア');
   }
 
+  //右クリック処理
+  const right_click_process = (event, x: number, y: number) => {
+    event.preventDefault();
+    console.log('右クリック！', x, y);
+  };
+
   const clikstone = (x: number, y: number) => {
     console.log('クリック※xy順', x, y);
 
@@ -253,6 +259,7 @@ const Home = () => {
                 className={styles.cell}
                 key={`${x}-${y}`}
                 onClick={() => clikstone(x, y)}
+                onContextMenu={(event) => right_click_process(event, x, y)}
                 style={{ background: ret_bomb_posicion.length === 1 ? '#fa0000' : '#b4b4b4' }}
               >
                 {cell !== -1 && (
