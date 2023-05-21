@@ -209,7 +209,30 @@ const Home = () => {
   const right_click_process = (event, x: number, y: number) => {
     event.preventDefault();
     console.log('右クリック！', x, y);
+    if (userInput[y][x] === 0 && board[y][x] === -1) {
+      newuserInput[y][x] = 3;
+      console.log('右3');
+    } else if (userInput[y][x] === 3 && board[y][x] === 10) {
+      newuserInput[y][x] = 2;
+    } else if (userInput[y][x] === 2 && board[y][x] === 9) {
+      newuserInput[y][x] = 0;
+    }
+    setUserInput(newuserInput);
+    console.log('uinput', newuserInput);
   };
+
+  //旗、？設置、消去
+  for (let zy = 0; zy < userInput.length; zy++) {
+    for (let zx = 0; zx < userInput[zy].length; zx++) {
+      if (userInput[zy][zx] === 0) {
+        board[zy][zx] = -1;
+      } else if (userInput[zy][zx] === 3) {
+        board[zy][zx] = 10;
+      } else if (userInput[zy][zx] === 2) {
+        board[zy][zx] = 9;
+      }
+    }
+  }
 
   const clikstone = (x: number, y: number) => {
     console.log('クリック※xy順', x, y);
