@@ -195,16 +195,6 @@ const Home = () => {
     return c;
   };
 
-  //クリア処理
-  let stone_count = math_count(9, board);
-  stone_count += math_count(10, board);
-  stone_count += math_count(-1, board);
-
-  if (stone_count === 10) {
-    niko_button_value = 13;
-    console.log('クリア');
-  }
-
   //右クリック処理
   const right_click_process = (event, x: number, y: number) => {
     event.preventDefault();
@@ -219,17 +209,35 @@ const Home = () => {
     }
     setUserInput(newuserInput);
     console.log('uinput', newuserInput);
+
+    //旗、？設置、消去
+    for (let zy = 0; zy < userInput.length; zy++) {
+      for (let zx = 0; zx < userInput[zy].length; zx++) {
+        if (userInput[zy][zx] === 0) {
+          board[zy][zx] = -1;
+        } else if (userInput[zy][zx] === 3) {
+          board[zy][zx] = 10;
+        } else if (userInput[zy][zx] === 2) {
+          board[zy][zx] = 9;
+        }
+      }
+    }
   };
 
-  //旗、？設置、消去
-  for (let zy = 0; zy < userInput.length; zy++) {
-    for (let zx = 0; zx < userInput[zy].length; zx++) {
-      if (userInput[zy][zx] === 0) {
-        board[zy][zx] = -1;
-      } else if (userInput[zy][zx] === 3) {
-        board[zy][zx] = 10;
-      } else if (userInput[zy][zx] === 2) {
-        board[zy][zx] = 9;
+  //クリア処理
+  let stone_count = math_count(9, board);
+  stone_count += math_count(10, board);
+  stone_count += math_count(-1, board);
+
+  if (stone_count === 10) {
+    niko_button_value = 13;
+    console.log('クリア');
+
+    for (let zy = 0; zy < userInput.length; zy++) {
+      for (let zx = 0; zx < userInput[zy].length; zx++) {
+        if (board[zy][zx] === -1 || board[zy][zx] === 9 || board[zy][zx] === 10) {
+          board[zy][zx] = 10;
+        }
       }
     }
   }
