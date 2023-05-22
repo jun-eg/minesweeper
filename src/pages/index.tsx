@@ -306,13 +306,22 @@ const Home = () => {
                 key={`${x}-${y}`}
                 onClick={() => clikstone(x, y)}
                 onContextMenu={(event) => right_click_process(event, x, y)}
-                style={{ background: ret_bomb_posicion.length === 1 ? '#fa0000' : '#b4b4b4' }}
+                style={{ background: '#aeaaaa' }}
               >
-                {cell !== -1 && (
+                {cell !== -1 && cell !== 9 && cell !== 10 && (
                   <div className={styles.picture} style={{ backgroundPosition: -30 * cell + 30 }} />
                 )}
 
-                {cell === -1 && <div className={styles.storn} key={`${x}-${y}`} />}
+                {(cell === -1 || cell === 9 || cell === 10) && (
+                  <div className={styles.storn} key={`${x}-${y}`}>
+                    {(cell === 9 || cell === 10) && (
+                      <div
+                        className={styles.picture}
+                        style={{ backgroundPosition: -30 * cell + 30 }}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
             ))
           )}
