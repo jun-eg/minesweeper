@@ -184,7 +184,7 @@ const Home = () => {
   const flag_count = math_count(3, userInput);
 
   //右クリック処理
-  const right_click_process = (event, x: number, y: number) => {
+  const right_click_process = (event: React.MouseEvent, x: number, y: number) => {
     event.preventDefault();
     console.log('右クリック！', x, y);
     if (userInput[y][x] === 0 && board[y][x] === -1 && flag_count < 10) {
