@@ -180,11 +180,14 @@ const Home = () => {
     return c;
   };
 
+  //旗数え
+  const flag_count = math_count(3, userInput);
+
   //右クリック処理
   const right_click_process = (event, x: number, y: number) => {
     event.preventDefault();
     console.log('右クリック！', x, y);
-    if (userInput[y][x] === 0 && board[y][x] === -1) {
+    if (userInput[y][x] === 0 && board[y][x] === -1 && flag_count < 10) {
       newuserInput[y][x] = 3;
       console.log('右3');
     } else if (userInput[y][x] === 3 && board[y][x] === 10) {
@@ -209,6 +212,17 @@ const Home = () => {
     }
   }
 
+  //残りbomb数
+  let left_bomb_count = 10;
+  for (let zy = 0; zy < userInput.length; zy++) {
+    for (let zx = 0; zx < userInput[zy].length; zx++) {
+      if (newuserInput[zy][zx] === 3 && bombMap[zy][zx] === 1) {
+        left_bomb_count -= 1;
+      }
+    }
+  }
+  console.log('残りbomb数', left_bomb_count);
+
   //ゲームオーバー処理
   if (isFailure === true) {
     //赤ボム座標取得
@@ -216,6 +230,7 @@ const Home = () => {
       for (let zx = 0; zx < newuserInput[zy].length; zx++) {
         if (newuserInput[zy][zx] === 1 && bombMap[zy][zx]) {
           board[zy][zx] = 12;
+          console.log('赤ボム座標,xy順', zx, zy);
         }
       }
     }
@@ -305,6 +320,11 @@ const Home = () => {
             style={{ backgroundPosition: -30 * niko_button_value + 30 }}
           />
         </div>
+        <div className={styles.timecontainer} />
+        <div className={styles.bombcountcontainer}>
+          <p>{left_bomb_count}</p>
+        </div>
+
         <div className={styles.board}>
           {board.map((row, y) =>
             row.map((cell, x) => (
