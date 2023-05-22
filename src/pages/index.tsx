@@ -46,8 +46,6 @@ const Home = () => {
   //11 = ボム
   //12 = 赤ボム
 
-  const ret_bomb_posicion: number[] = [];
-
   //初期board設置
   const rows = 9;
   const cols = 9;
@@ -213,6 +211,15 @@ const Home = () => {
 
   //ゲームオーバー処理
   if (isFailure === true) {
+    //赤ボム座標取得
+    for (let zy = 0; zy < newuserInput.length; zy++) {
+      for (let zx = 0; zx < newuserInput[zy].length; zx++) {
+        if (newuserInput[zy][zx] === 1 && bombMap[zy][zx]) {
+          board[zy][zx] = 12;
+        }
+      }
+    }
+
     //boardにbonb設置
     for (let zy = 0; zy < bombMap.length; zy++) {
       for (let zx = 0; zx < bombMap[zy].length; zx++) {
@@ -313,11 +320,11 @@ const Home = () => {
                 )}
 
                 {(cell === -1 || cell === 9 || cell === 10) && (
-                  <div className={styles.storn} key={`${x}-${y}`}>
+                  <div className={styles.stone} key={`${x}-${y}`}>
                     {(cell === 9 || cell === 10) && (
                       <div
                         className={styles.picture}
-                        style={{ backgroundPosition: -30 * cell + 30 }}
+                        style={{ backgroundPosition: `${-100 * cell + 100}%` }}
                       />
                     )}
                   </div>

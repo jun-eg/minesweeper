@@ -54,7 +54,7 @@
   display: flex;
 }
 
-.storn {
+.stone {
   width: 30px;
   height: 30px;
   background-color: rgb(221 220 220);
@@ -62,4 +62,11 @@
   justify-content: center;
   align-items: center;
   display: flex;
+}
+
+.stone > .picture {
+  width: 24px;
+  height: 24px;
+  background-size: 1400%;
+  background-repeat: repeat;
 }
