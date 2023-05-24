@@ -22,6 +22,10 @@ const Home = () => {
 
   const newuserInput = JSON.parse(JSON.stringify(userInput));
 
+  const [timer, settimer] = useState(0);
+
+  const new_timer = JSON.parse(JSON.stringify(timer));
+
   // 1 = ボムあり
   // 0 = ボムなし
 
@@ -55,6 +59,7 @@ const Home = () => {
 
   console.log('board', board);
 
+  //play判定
   const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
 
   //ゲームオーバー判定
@@ -180,14 +185,11 @@ const Home = () => {
     return c;
   };
 
-  //旗数え
-  const flag_count = math_count(3, userInput);
-
   //右クリック処理
   const right_click_process = (event: React.MouseEvent, x: number, y: number) => {
     event.preventDefault();
     console.log('右クリック！', x, y);
-    if (userInput[y][x] === 0 && board[y][x] === -1 && flag_count < 10) {
+    if (userInput[y][x] === 0 && board[y][x] === -1) {
       newuserInput[y][x] = 3;
       console.log('右3');
     } else if (userInput[y][x] === 3 && board[y][x] === 10) {
@@ -212,16 +214,40 @@ const Home = () => {
     }
   }
 
-  //残りbomb数
-  let left_bomb_count = 10;
+  //残りflag数
+  let left_flag_count = 10;
   for (let zy = 0; zy < userInput.length; zy++) {
     for (let zx = 0; zx < userInput[zy].length; zx++) {
-      if (newuserInput[zy][zx] === 3 && bombMap[zy][zx] === 1) {
-        left_bomb_count -= 1;
+      if (newuserInput[zy][zx] === 3) {
+        left_flag_count -= 1;
       }
     }
   }
-  console.log('残りbomb数', left_bomb_count);
+  console.log('残りbomb数', left_flag_count);
+
+  //タイマーstop条件
+  const timerState = { stop: 0 };
+
+  //タイマーstars条件
+  let time_start = false;
+  if (math_count(1, userInput) === 1) {
+    time_start = true;
+  }
+
+  console.log('stop判定', timerState);
+
+  //タイマー
+  let counter = timer;
+  if (time_start) {
+    const timerId = setInterval(() => {
+      counter++;
+      console.log(counter);
+      if (timerState.stop === 1) {
+        console.log('stop');
+        clearInterval(timerId);
+      }
+    }, 1000);
+  }
 
   //ゲームオーバー処理
   if (isFailure === true) {
@@ -245,6 +271,8 @@ const Home = () => {
     }
 
     niko_button_value = 14;
+
+    timerState.stop = 1;
   }
 
   //クリア処理
@@ -267,6 +295,8 @@ const Home = () => {
         }
       }
     }
+
+    timerState.stop = 1;
   }
 
   const clikstone = (x: number, y: number) => {
@@ -320,9 +350,11 @@ const Home = () => {
             style={{ backgroundPosition: -30 * niko_button_value + 30 }}
           />
         </div>
-        <div className={styles.timecontainer} />
-        <div className={styles.bombcountcontainer}>
-          <p>{left_bomb_count}</p>
+        <div className={styles.timecontainer}>
+          <p>{counter}</p>
+        </div>
+        <div className={styles.flagcountcontainer}>
+          <p>{left_flag_count}</p>
         </div>
 
         <div className={styles.board}>

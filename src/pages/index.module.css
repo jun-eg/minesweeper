@@ -48,9 +48,12 @@
   position: absolute;
   top: 40px;
   right: 15px;
+  font-size: 30px;
+  color: #ed0808d7;
+  font-weight: 700;
 }
 
-.bombcountcontainer {
+.flagcountcontainer {
   width: 110px;
   height: 50px;
   background-color: rgb(156 153 153);
