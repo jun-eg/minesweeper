@@ -15,30 +15,29 @@
 }
 
 .boardaround {
-  width: 280px;
-  height: 280px;
+  width: 286px;
+  height: 286px;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  border: inset 5px rgb(155 155 155);
+  border: inset 8px rgb(209 209 209);
 }
 
 .boardcontainer {
-  width: 350px;
-  height: 450px;
+  width: 331px;
+  height: 431px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 30px;
+  gap: 15px;
   align-items: center;
   background-color: rgb(221 220 220);
-  border: outset 12px rgb(201 200 200);
+  border: outset 8px rgb(201 200 200);
   position: absolute;
 }
 
 .topcontainer {
-  width: 320px;
+  width: 286px;
   height: 90px;
   background-color: rgb(229 224 224);
   border: inset 8px rgb(207 206 206);
@@ -55,11 +54,11 @@
   align-items: center;
   display: flex;
   position: absolute;
-  top: 35px;
+  top: 32px;
 }
 
 .timecontainer {
-  width: 110px;
+  width: 80px;
   height: 50px;
   background-color: rgb(199 196 196);
   border: inset 3px rgb(176 175 175);
@@ -67,15 +66,15 @@
   align-items: center;
   display: flex;
   position: absolute;
-  top: 35px;
-  right: 15px;
+  top: 32px;
+  right: 30px;
   font-size: 30px;
   color: #ed0808d7;
   font-weight: 700;
 }
 
 .flagcountcontainer {
-  width: 110px;
+  width: 80px;
   height: 50px;
   background-color: rgb(199 196 196);
   border: inset 3px rgb(176 175 175);
@@ -83,9 +82,9 @@
   align-items: center;
   display: flex;
   position: absolute;
-  top: 35px;
-  left: 15px;
-  font-size: 30px;
+  top: 32px;
+  left: 30px;
+  font-size: 25px;
   color: #ed0808d7;
   font-weight: 700;
 }
@@ -110,7 +109,7 @@
 .stone {
   width: 30px;
   height: 30px;
-  background-color: rgb(221 220 220);
+  background-color: rgb(201 200 200);
   border: outset 3px rgb(252 252 252);
   justify-content: center;
   align-items: center;

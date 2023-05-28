@@ -52,11 +52,6 @@ export const useIndex = () => {
 
   const board = useBoard({ userInput, bombMap });
 
-  //初期board設置
-  const rows = 9;
-  const cols = 9;
-  const initialValue = -1;
-
   //計算値をboardに反映
   const directions = [
     [0, -1],
@@ -144,17 +139,6 @@ export const useIndex = () => {
     }
   }
 
-  //残りflag数
-  let left_flag_count = 10;
-  for (let zy = 0; zy < userInput.length; zy++) {
-    for (let zx = 0; zx < userInput[zy].length; zx++) {
-      if (newuserInput[zy][zx] === 3) {
-        left_flag_count -= 1;
-      }
-    }
-  }
-  console.log('残り旗数', left_flag_count);
-
   // //タイマーstars条件
   // let time_start = false;
   // if (math_count(1, userInput) === 1) {
@@ -227,6 +211,18 @@ export const useIndex = () => {
 
     // clearInterval(timerId);
   }
+
+  //残りflag数
+  let left_flag_count = 10;
+  for (let zy = 0; zy < userInput.length; zy++) {
+    for (let zx = 0; zx < userInput[zy].length; zx++) {
+      if (board[zy][zx] === 10) {
+        left_flag_count -= 1;
+      }
+    }
+  }
+
+  console.log('残り旗数', left_flag_count);
 
   const clikstone = (x: number, y: number) => {
     console.log('クリック※xy順', x, y);
