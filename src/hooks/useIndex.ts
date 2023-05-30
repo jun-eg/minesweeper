@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useBoard } from './useBoard';
 
 export const useIndex = () => {
@@ -41,6 +41,10 @@ export const useIndex = () => {
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
+  const [timer_count, setTimer_count] = useState(0);
+
+  const new_timer_count = JSON.parse(JSON.stringify(timer_count));
+
   //board
   //-1 = 石
   // 0 = 画像なしセル
@@ -65,6 +69,8 @@ export const useIndex = () => {
   ];
 
   console.log('board', board);
+
+  let play = false;
 
   //play判定
   const isPlaying = userInput.some((row) => row.some((input) => input !== 0));
@@ -94,6 +100,8 @@ export const useIndex = () => {
       }
 
       setUserInput(newuserInput);
+
+      setTimer_count(0);
     }
   };
 
@@ -199,36 +207,6 @@ export const useIndex = () => {
     }
   }
 
-  //タイマーstars条件
-  let time_start = false;
-  if (math_count(1, userInput) === 1) {
-    time_start = true;
-  }
-
-  //タイマー
-  let count = 0;
-
-  let timeId = null;
-
-  const start_timer = () => {
-    timeId = setInterval(() => {
-      if (isFailure) {
-        console.log('処理をキャンセル！');
-        stop_timer(timeId);
-      }
-      console.log(count);
-      count++;
-    }, 1000);
-  };
-
-  // if (time_start) {
-  //   start_timer();
-  // }
-
-  const stop_timer = (id) => {
-    clearInterval(id);
-  };
-
   console.log('残り旗数', left_flag_count);
 
   const clikstone = (x: number, y: number) => {
@@ -270,7 +248,6 @@ export const useIndex = () => {
       }
       bombMap[y][x] = 0;
       setBombMap(bombMap);
-      start_timer();
     }
 
     //数字クリック
@@ -303,5 +280,62 @@ export const useIndex = () => {
 
     setUserInput(newuserInput);
   };
-  return { board, click_niko, right_click_process, clikstone, niko_button_value, left_flag_count };
+
+  //タイマーstars条件
+  // let time_start = false;
+
+  if (isPlaying && isFailure === false) {
+    play = true;
+  }
+
+  //タイマー
+  // let timeId = null;
+
+  // const start_timer = () => {
+  //   timeId = setInterval(() => {
+  //     console.log(new_timer_count);
+  //     new_timer_count++;
+  //     stop_timer(timeId);
+  //   }, 1000);
+  // };
+
+  // if (isPlaying) {
+  //   start_timer();
+  // }
+
+  console.log('effect前', play);
+
+  useEffect(() => {
+    if (play) {
+      const timeId = setInterval(() => {
+        setTimer_count((timer_count) => timer_count + 1);
+
+        console.log('1');
+      }, 1000);
+
+      return () => {
+        clearInterval(timeId);
+      };
+    }
+    // console.log('タイマー', timer_count);
+  }, [play]);
+
+  // setTimer_count(new_timer_count);
+
+  // if (time_start) {
+  //   start_timer();
+  // }
+
+  // const stop_timer = (id) => {
+  //   clearInterval(id);
+  // };
+  return {
+    board,
+    click_niko,
+    right_click_process,
+    clikstone,
+    niko_button_value,
+    left_flag_count,
+    timer_count,
+  };
 };

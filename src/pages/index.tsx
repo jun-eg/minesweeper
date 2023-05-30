@@ -2,8 +2,15 @@ import { useIndex } from '../hooks/useIndex';
 import styles from './index.module.css';
 
 const Home = () => {
-  const { board, click_niko, right_click_process, clikstone, niko_button_value, left_flag_count } =
-    useIndex();
+  const {
+    board,
+    click_niko,
+    right_click_process,
+    clikstone,
+    niko_button_value,
+    left_flag_count,
+    timer_count,
+  } = useIndex();
 
   return (
     <div className={styles.container}>
@@ -15,7 +22,9 @@ const Home = () => {
               style={{ backgroundPosition: -30 * niko_button_value + 30 }}
             />
           </div>
-          <div className={styles.timecontainer}>{/* <p>{counter}</p> */}</div>
+          <div className={styles.timecontainer}>
+            <p>{timer_count}</p>
+          </div>
           <div className={styles.flagcountcontainer}>
             <p>{left_flag_count}</p>
           </div>
