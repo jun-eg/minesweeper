@@ -139,26 +139,6 @@ export const useIndex = () => {
     }
   }
 
-  //タイマーstars条件
-  let time_start = false;
-  if (math_count(1, userInput) === 1) {
-    time_start = true;
-  }
-
-  //タイマー
-
-  let counter = 0;
-
-  if (time_start && isFailure !== true) {
-    const timerId = setInterval(() => {
-      if (isFailure) {
-        clearInterval(timerId);
-      }
-      counter++;
-      console.log(counter);
-    }, 1000);
-  }
-
   //ゲームオーバー処理
   if (isFailure === true) {
     //赤ボム座標取得
@@ -219,6 +199,36 @@ export const useIndex = () => {
     }
   }
 
+  //タイマーstars条件
+  let time_start = false;
+  if (math_count(1, userInput) === 1) {
+    time_start = true;
+  }
+
+  //タイマー
+  let count = 0;
+
+  let timeId = null;
+
+  const start_timer = () => {
+    timeId = setInterval(() => {
+      if (isFailure) {
+        console.log('処理をキャンセル！');
+        stop_timer(timeId);
+      }
+      console.log(count);
+      count++;
+    }, 1000);
+  };
+
+  // if (time_start) {
+  //   start_timer();
+  // }
+
+  const stop_timer = (id) => {
+    clearInterval(id);
+  };
+
   console.log('残り旗数', left_flag_count);
 
   const clikstone = (x: number, y: number) => {
@@ -260,6 +270,7 @@ export const useIndex = () => {
       }
       bombMap[y][x] = 0;
       setBombMap(bombMap);
+      start_timer();
     }
 
     //数字クリック
