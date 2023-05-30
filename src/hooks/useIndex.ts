@@ -43,8 +43,6 @@ export const useIndex = () => {
 
   const [timer_count, setTimer_count] = useState(0);
 
-  const new_timer_count = JSON.parse(JSON.stringify(timer_count));
-
   //board
   //-1 = 石
   // 0 = 画像なしセル
@@ -150,10 +148,13 @@ export const useIndex = () => {
   //ゲームオーバー処理
   if (isFailure === true) {
     //赤ボム座標取得
+
+    let red_bomb_position: number[] = [];
+
     for (let zy = 0; zy < newuserInput.length; zy++) {
       for (let zx = 0; zx < newuserInput[zy].length; zx++) {
         if (newuserInput[zy][zx] === 1 && bombMap[zy][zx]) {
-          board[zy][zx] = 12;
+          red_bomb_position = [zy, zx];
           console.log('赤ボム座標,xy順', zx, zy);
         }
       }
@@ -168,17 +169,24 @@ export const useIndex = () => {
       }
     }
 
+    //赤bomb設置
+    board[red_bomb_position[0]][red_bomb_position[1]] = 22;
+
     niko_button_value = 14;
 
     // clearInterval(timerId);
   }
 
   //クリア処理
-  let stone_count = math_count(9, board);
-  stone_count += math_count(10, board);
-  stone_count += math_count(-1, board);
+  let isgoal = false;
 
-  if (stone_count === 10) {
+  let opened_cell_count = 0;
+
+  for (let i = 0; i < 11; i++) {
+    opened_cell_count += math_count(i, board);
+  }
+
+  if (81 - opened_cell_count === 10) {
     niko_button_value = 13;
     console.log('クリア');
 
@@ -194,7 +202,7 @@ export const useIndex = () => {
       }
     }
 
-    // clearInterval(timerId);
+    isgoal = true;
   }
 
   //残りflag数
@@ -253,7 +261,6 @@ export const useIndex = () => {
     //数字クリック
 
     //周り旗数え
-
     let click_around_flag = 0;
 
     for (const around of directions) {
@@ -282,29 +289,11 @@ export const useIndex = () => {
   };
 
   //タイマーstars条件
-  // let time_start = false;
-
-  if (isPlaying && isFailure === false) {
+  if (isPlaying && isFailure === false && timer_count < 999 && isgoal === false) {
     play = true;
   }
 
   //タイマー
-  // let timeId = null;
-
-  // const start_timer = () => {
-  //   timeId = setInterval(() => {
-  //     console.log(new_timer_count);
-  //     new_timer_count++;
-  //     stop_timer(timeId);
-  //   }, 1000);
-  // };
-
-  // if (isPlaying) {
-  //   start_timer();
-  // }
-
-  console.log('effect前', play);
-
   useEffect(() => {
     if (play) {
       const timeId = setInterval(() => {
@@ -317,18 +306,8 @@ export const useIndex = () => {
         clearInterval(timeId);
       };
     }
-    // console.log('タイマー', timer_count);
   }, [play]);
 
-  // setTimer_count(new_timer_count);
-
-  // if (time_start) {
-  //   start_timer();
-  // }
-
-  // const stop_timer = (id) => {
-  //   clearInterval(id);
-  // };
   return {
     board,
     click_niko,

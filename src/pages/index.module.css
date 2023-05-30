@@ -60,7 +60,7 @@
 .timecontainer {
   width: 80px;
   height: 50px;
-  background-color: rgb(199 196 196);
+  background-color: rgb(57 57 57);
   border: inset 3px rgb(176 175 175);
   justify-content: center;
   align-items: center;
@@ -68,7 +68,7 @@
   position: absolute;
   top: 32px;
   right: 30px;
-  font-size: 30px;
+  font-size: 40px;
   color: #ed0808d7;
   font-weight: 700;
 }
@@ -76,7 +76,7 @@
 .flagcountcontainer {
   width: 80px;
   height: 50px;
-  background-color: rgb(199 196 196);
+  background-color: rgb(57 57 57);
   border: inset 3px rgb(176 175 175);
   justify-content: center;
   align-items: center;
@@ -84,7 +84,7 @@
   position: absolute;
   top: 32px;
   left: 30px;
-  font-size: 25px;
+  font-size: 40px;
   color: #ed0808d7;
   font-weight: 700;
 }
@@ -99,7 +99,6 @@
 .cell {
   width: 30px;
   height: 30px;
-  background-color: rgb(177 174 174);
   border: solid 0.5px rgb(91 91 91);
   justify-content: center;
   align-items: center;

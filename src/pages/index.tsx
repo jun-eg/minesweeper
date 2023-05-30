@@ -39,13 +39,17 @@ const Home = () => {
                   key={`${x}-${y}`}
                   onClick={() => clikstone(x, y)}
                   onContextMenu={(event) => right_click_process(event, x, y)}
-                  style={{ background: '#aeaaaa' }}
+                  style={{ background: cell === 22 ? '#fb0101' : '#b1afaf' }}
                 >
-                  {cell !== -1 && cell !== 9 && cell !== 10 && (
+                  {cell !== -1 && cell !== 9 && cell !== 10 && cell !== 22 && (
                     <div
                       className={styles.picture}
                       style={{ backgroundPosition: -30 * cell + 30 }}
                     />
+                  )}
+
+                  {cell === 22 && (
+                    <div className={styles.picture} style={{ backgroundPosition: -30 * 11 + 30 }} />
                   )}
 
                   {(cell === -1 || cell === 9 || cell === 10) && (
