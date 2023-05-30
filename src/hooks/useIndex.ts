@@ -139,28 +139,25 @@ export const useIndex = () => {
     }
   }
 
-  // //タイマーstars条件
-  // let time_start = false;
-  // if (math_count(1, userInput) === 1) {
-  //   time_start = true;
-  // }
+  //タイマーstars条件
+  let time_start = false;
+  if (math_count(1, userInput) === 1) {
+    time_start = true;
+  }
 
   //タイマー
 
-  // let timerId;
-  // let counter = timer;
+  let counter = 0;
 
-  // if (time_start) {
-  //   timerId = setInterval(() => {
-  //     counter++;
-  //     console.log(counter);
-  //   }, 1000);
-  // }
-
-  // if (isFailure === true) {
-  //   clearInterval(timerId);
-  //   console.log('stop');
-  // }
+  if (time_start && isFailure !== true) {
+    const timerId = setInterval(() => {
+      if (isFailure) {
+        clearInterval(timerId);
+      }
+      counter++;
+      console.log(counter);
+    }, 1000);
+  }
 
   //ゲームオーバー処理
   if (isFailure === true) {
